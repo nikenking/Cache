@@ -3,11 +3,12 @@ package com.dell.cache.service;
 import com.dell.cache.bean.Employee;
 import com.dell.cache.mapper.EmployeeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.*;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+@CacheConfig(cacheNames = "emp")//抽取公共配置，除了配置当前server的全局仓库，总共有四大功能，这是其一
 @Service
 public class EmployeeService {
     @Autowired
@@ -30,6 +31,19 @@ public class EmployeeService {
         return employee;
     }
 
+    @Caching(
+            cacheable = {
+                    @Cacheable(value = "emp",key = "#lastname")
+            },
+            put = {//因为CachePut起作用了，所以方法还是会执行的，但返回结果是之前缓存的
+                    @CachePut(value = "emp",key = "#result.id"),
+                    @CachePut(value = "emp",key = "#result.email")
+            }
+    )
+    public Employee getEmployeeBylastname(String lastname){
+        return em.getEmployeeBylastname(lastname);
+    }
+
     @CachePut(value = "emp",key = "#result.id")
     public Employee updataEmployee(Employee employee){
         System.out.println("需同时加入到emp缓存区的employee："+employee.toString());
@@ -41,9 +55,18 @@ public class EmployeeService {
         em.insertEmployee(employee);
     }
 
-    @CacheEvict(value = "emp",key = "#id"/*,allEntries = true*//*一口气全部删除,在方法执行之前删除所有，优先级最高，谨慎使用*/)
+    @CacheEvict(value = "emp",key = "#id"/*,allEntries = true*//*一口气全部删除,在方法执行之前删除所有，优先级最高，谨慎使用,
+    beforeInvocation = true//在方法之前就删除,*/)
     public void delEmployee(Integer id){
         System.out.println("删除的id:"+id);
         em.delEmployee(id);
     }
+
+    @Cacheable(cacheNames = "emp",key = "#flag")//将这个方法的运行结果进行缓存
+    public List<Employee> getEmployeeAll(String flag){
+        List<Employee> employees = em.getEmployeeAll();
+        System.out.println("未缓存，查询所有employee");
+        return employees;
+    }
+
 }

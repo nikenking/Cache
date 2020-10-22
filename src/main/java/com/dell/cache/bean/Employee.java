@@ -1,6 +1,8 @@
 package com.dell.cache.bean;
 
-public class Employee {
+import java.io.Serializable;
+
+public class Employee implements Serializable {
     public Integer id;
     private String lastName;
     private String email;
