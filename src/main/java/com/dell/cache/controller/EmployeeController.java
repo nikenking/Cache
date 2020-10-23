@@ -1,5 +1,6 @@
 package com.dell.cache.controller;
 
+import com.dell.cache.bean.Department;
 import com.dell.cache.bean.Employee;
 import com.dell.cache.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class EmployeeController {
         if (Pattern.matches("\\d+",id)){
             return es.getEmployeeById(Integer.valueOf(id)).toString();
         }else{
-            List<Employee> list = es.getEmployeeAll(id);
+            List<Employee> list = es.getEmployeeAll("all");
             StringBuilder result = new StringBuilder("");
             for (Employee employee : list) {
                 result.append(employee.toString()).append("\n");
@@ -34,12 +35,14 @@ public class EmployeeController {
     public String getEmployeeByName(@PathVariable("name") String name){
         return es.getEmployeeBylastname(name).toString();
     }
-
+    @GetMapping(value = {"/dep/{id}"})
+    public String getDepartmentById(@PathVariable("id") Integer id){
+        return es.getDepartmentById(id).toString();
+    }
     @GetMapping(value = {"/emp"})
     public String upDataEmployee(Employee employee){
         return es.updataEmployee(employee).toString();
     }
-
     @GetMapping(value = {"/addEmp"})
     public String insertEmployee(Employee employee){
         System.out.println("添加的employee:"+employee.toString());

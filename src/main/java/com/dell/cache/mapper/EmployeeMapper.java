@@ -1,5 +1,6 @@
 package com.dell.cache.mapper;
 
+import com.dell.cache.bean.Department;
 import com.dell.cache.bean.Employee;
 import org.apache.ibatis.annotations.*;
 
@@ -19,4 +20,6 @@ public interface EmployeeMapper {
     public Employee getEmployeeBylastname(String lastName);
     @Select("Select * from employee")
     public List<Employee> getEmployeeAll();
+    @Select("select * from department where id=#{id}")
+    public Department getDepartmentById(Integer id);
 }

@@ -2,7 +2,7 @@ package com.dell.cache;
 
 import com.dell.cache.bean.Employee;
 import com.dell.cache.mapper.EmployeeMapper;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;

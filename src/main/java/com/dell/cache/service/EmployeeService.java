@@ -1,5 +1,6 @@
 package com.dell.cache.service;
 
+import com.dell.cache.bean.Department;
 import com.dell.cache.bean.Employee;
 import com.dell.cache.mapper.EmployeeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,5 +69,8 @@ public class EmployeeService {
         System.out.println("未缓存，查询所有employee");
         return employees;
     }
-
+    @Cacheable(cacheNames = "dep",key = "#id")
+    public Department getDepartmentById(Integer id) {
+        return em.getDepartmentById(id);
+    }
 }
